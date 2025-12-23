@@ -1,55 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Group Discussion Platform</title>
+
   <style>
     body {
-      background: #0e1117;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
       color: white;
-      font-family: Arial;
       text-align: center;
     }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 220px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 16px;
+      margin-left: 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #controls {
+      margin: 20px 0;
+    }
+
+    #startBtn, #stopBtn {
+      display: none;
+      margin: 10px;
+    }
+
+    #jitsi {
+      width: 100%;
+      height: 500px;
+      margin-top: 20px;
+    }
+
     iframe {
       width: 100%;
-      height: 550px;
-      border: 0;
+      height: 100%;
+      border: none;
       border-radius: 10px;
     }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    pre {
-      background: #1c1f26;
-      padding: 15px;
+
+    #report {
+      margin: 30px;
+      padding: 20px;
+      background: #020617;
       border-radius: 10px;
-      text-align: left;
-      max-width: 90%;
-      margin: auto;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
+
 <body>
 
-<h2>🎤 Group Discussion Platform</h2>
+  <h1>🎤 Group Discussion Platform</h1>
 
-<input id="room" placeholder="Enter Room Name" />
-<button onclick="joinRoom()">Join GD</button>
+  <div id="controls">
+    <input id="room" placeholder="Enter Room Name" />
+    <button onclick="joinRoom()">Join GD</button>
+  </div>
 
-<br><br>
+  <div>
+    <button id="startBtn" onclick="startEvaluation()">Start Evaluation</button>
+    <button id="stopBtn" onclick="stopEvaluation()">Stop & Generate Report</button>
+  </div>
 
-<button onclick="startRecording()">Start Evaluation</button>
-<button onclick="stopAndClose()">Stop & Generate Report</button>
+  <div id="jitsi"></div>
 
-<br><br>
+  <div id="report">
+    <h3>📊 GD Report</h3>
+    <pre id="reportText">No report yet</pre>
+  </div>
 
-<div id="jitsi"></div>
-
-<h3>📊 GD Report</h3>
-<pre id="report">No report yet</pre>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
