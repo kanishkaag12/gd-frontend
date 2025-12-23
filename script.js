@@ -2,6 +2,7 @@ let recorder;
 let chunks = [];
 let audioStream;
 
+// 🔹 JOIN JITSI ROOM
 function joinRoom() {
   const room = document.getElementById("room").value;
   if (!room) {
@@ -22,6 +23,7 @@ function joinRoom() {
     });
 }
 
+// 🔹 START AUDIO RECORDING
 function startRecording() {
   if (!audioStream) {
     alert("Join room first");
@@ -33,11 +35,18 @@ function startRecording() {
   recorder.ondataavailable = e => chunks.push(e.data);
   recorder.start();
 
-  document.getElementById("report").innerText = "Recording audio for evaluation...";
+  document.getElementById("report").innerText =
+    "Recording audio for evaluation...";
 }
 
-function stopRecording() {
+// 🔹 STOP RECORDING + CLOSE JITSI (IMPORTANT)
+function stopAndClose() {
+  if (!recorder) return;
+
   recorder.stop();
+
+  // ✅ IMMEDIATELY remove Jitsi iframe (NO AD SHOWN)
+  document.getElementById("jitsi").innerHTML = "";
 
   recorder.onstop = async () => {
     const blob = new Blob(chunks, { type: "audio/wav" });
@@ -46,10 +55,13 @@ function stopRecording() {
 
     document.getElementById("report").innerText = "Evaluating...";
 
-    const res = await fetch("https://gd-backend-2d44.onrender.com", {
-      method: "POST",
-      body: form
-    });
+    const res = await fetch(
+      "https://vitiligoid-kaylynn-mixible.ngrok-free.dev/evaluate",
+      {
+        method: "POST",
+        body: form
+      }
+    );
 
     const data = await res.json();
     document.getElementById("report").innerText =

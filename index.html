@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GD Platform</title>
-</head>
-<body>
-
-<h2>Group Discussion</h2>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Group Discussion</title>
+  <title>Group Discussion Platform</title>
   <style>
-    body { background:#0e1117; color:white; font-family:Arial; text-align:center }
-    iframe { width:100%; height:550px; border:0; border-radius:10px }
-    button { padding:10px 20px; margin:10px; font-size:16px }
-    pre { background:#1c1f26; padding:15px; border-radius:10px; text-align:left }
+    body {
+      background: #0e1117;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+    }
+    iframe {
+      width: 100%;
+      height: 550px;
+      border: 0;
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    pre {
+      background: #1c1f26;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: left;
+      max-width: 90%;
+      margin: auto;
+    }
   </style>
 </head>
 <body>
@@ -27,7 +41,9 @@
 <br><br>
 
 <button onclick="startRecording()">Start Evaluation</button>
-<button onclick="stopRecording()">Stop & Generate Report</button>
+<button onclick="stopAndClose()">Stop & Generate Report</button>
+
+<br><br>
 
 <div id="jitsi"></div>
 
@@ -35,14 +51,5 @@
 <pre id="report">No report yet</pre>
 
 <script src="script.js"></script>
-</body>
-</html>
-
-<iframe
-  src="https://meet.jit.si/GD_AI_EDUCATION_2025"
-  style="width:100%; height:600px; border:0;"
-  allow="camera; microphone; fullscreen"
-></iframe>
-
 </body>
 </html>
