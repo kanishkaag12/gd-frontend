@@ -2,29 +2,29 @@
 <html>
 <head>
   <title>GD Room</title>
+  <script src="https://unpkg.com/livekit-client/dist/livekit-client.umd.js"></script>
   <style>
     body { background:#0e1117; color:white; text-align:center; font-family:Arial }
-    video { width:280px; margin:10px; border-radius:10px }
-    button { padding:10px; margin:5px }
+    video { width:300px; margin:10px; border-radius:10px }
+    button { padding:10px 20px; margin:5px }
   </style>
 </head>
 <body>
 
 <h2>🎤 Group Discussion</h2>
 
-<input id="room" placeholder="Room ID">
+<input id="room" placeholder="Room ID" />
 <button onclick="joinRoom()">Join Room</button>
 <br><br>
 
-<button onclick="startRecording()">Start Evaluation</button>
-<button onclick="stopRecording()">Stop & Score</button>
+<button onclick="startEvaluation()">Start Evaluation</button>
+<button onclick="stopEvaluation()">Stop & Score</button>
 
 <div id="videos"></div>
 
 <h3>📊 Report</h3>
 <pre id="report">No report</pre>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

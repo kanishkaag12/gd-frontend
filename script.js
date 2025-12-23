@@ -1,43 +1,64 @@
-const socket = io("https://gd-backend-2d44.onrender.com");
-let localStream, recorder, chunks = [];
-const videos = document.getElementById("videos");
-const report = document.getElementById("report");
+const { Room } = LivekitClient;
+
+const LIVEKIT_URL = "wss://groupdiscussion-tnfney72.livekit.cloud";
+const BACKEND_URL = "https://gd-backend-2d44.onrender.com";
+
+let room;
+let audioTrack;
+let mediaRecorder;
+let chunks = [];
 
 async function joinRoom() {
-    const room = document.getElementById("room").value;
-    socket.emit("join", room);
+  const roomName = document.getElementById("room").value;
 
-    localStream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+  const tokenRes = await fetch(`${BACKEND_URL}/token?room=${roomName}`);
+  const { token } = await tokenRes.json();
 
-    const video = document.createElement("video");
-    video.srcObject = localStream;
-    video.autoplay = true;
-    video.muted = true;
-    videos.appendChild(video);
+  room = new Room();
+  await room.connect(LIVEKIT_URL, token);
+
+  room.localParticipant.enableCameraAndMicrophone();
+
+  room.on("trackSubscribed", (track) => {
+    if (track.kind === "video") {
+      const el = track.attach();
+      document.getElementById("videos").appendChild(el);
+    }
+    if (track.kind === "audio") {
+      track.attach();
+    }
+  });
+
+  audioTrack = room.localParticipant.audioTracks.values().next().value.track;
 }
 
-function startRecording() {
-    chunks = [];
-    recorder = new MediaRecorder(localStream);
-    recorder.ondataavailable = e => chunks.push(e.data);
-    recorder.start();
-    report.innerText = "Recording...";
+function startEvaluation() {
+  chunks = [];
+  const stream = new MediaStream([audioTrack.mediaStreamTrack]);
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = e => chunks.push(e.data);
+  mediaRecorder.start();
+
+  document.getElementById("report").innerText = "Recording...";
 }
 
-function stopRecording() {
-    recorder.stop();
-    recorder.onstop = async () => {
-        const blob = new Blob(chunks, { type:"audio/wav" });
-        const form = new FormData();
-        form.append("audio", blob, "gd.wav");
+function stopEvaluation() {
+  mediaRecorder.stop();
 
-        report.innerText = "Evaluating...";
+  mediaRecorder.onstop = async () => {
+    const blob = new Blob(chunks, { type: "audio/wav" });
+    const form = new FormData();
+    form.append("audio", blob, "gd.wav");
 
-        const res = await fetch("http://127.0.0.1:8000/evaluate", {
-            method: "POST",
-            body: form
-        });
-        const data = await res.json();
-        report.innerText = JSON.stringify(data, null, 2);
-    };
+    document.getElementById("report").innerText = "Evaluating...";
+
+    const res = await fetch(`${BACKEND_URL}/evaluate`, {
+      method: "POST",
+      body: form
+    });
+
+    const data = await res.json();
+    document.getElementById("report").innerText =
+      JSON.stringify(data, null, 2);
+  };
 }
