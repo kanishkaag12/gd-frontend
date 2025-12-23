@@ -4,24 +4,25 @@ let audioStream;
 
 // 🔹 JOIN JITSI ROOM
 function joinRoom() {
-  const room = document.getElementById("room").value;
+  const room = document.getElementById("room").value.trim();
   if (!room) {
     alert("Enter room name");
     return;
   }
 
+  const roomName = `GD_${room}`; // prefix fixes auto-join
+
   document.getElementById("jitsi").innerHTML = `
     <iframe
-      src="https://meet.jit.si/${room}"
+      src="https://meet.jit.si/${roomName}
+        #config.prejoinPageEnabled=false
+        &config.startWithAudioMuted=false
+        &config.startWithVideoMuted=false"
       allow="camera; microphone; fullscreen"
     ></iframe>
   `;
-
-  navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-      audioStream = stream;
-    });
 }
+
 
 // 🔹 START AUDIO RECORDING
 function startRecording() {
