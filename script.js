@@ -1,58 +1,52 @@
-const { Room } = LivekitClient;
-
-const LIVEKIT_URL = "wss://groupdiscussion-tnfney72.livekit.cloud";
-const BACKEND_URL = "https://gd-backend-2d44.onrender.com";
-
-let room;
-let audioTrack;
-let mediaRecorder;
+let recorder;
 let chunks = [];
+let audioStream;
 
-async function joinRoom() {
-  const roomName = document.getElementById("room").value;
+function joinRoom() {
+  const room = document.getElementById("room").value;
+  if (!room) {
+    alert("Enter room name");
+    return;
+  }
 
-  const tokenRes = await fetch(`${BACKEND_URL}/token?room=${roomName}`);
-  const { token } = await tokenRes.json();
+  document.getElementById("jitsi").innerHTML = `
+    <iframe
+      src="https://meet.jit.si/${room}"
+      allow="camera; microphone; fullscreen"
+    ></iframe>
+  `;
 
-  room = new Room();
-  await room.connect(LIVEKIT_URL, token);
-
-  room.localParticipant.enableCameraAndMicrophone();
-
-  room.on("trackSubscribed", (track) => {
-    if (track.kind === "video") {
-      const el = track.attach();
-      document.getElementById("videos").appendChild(el);
-    }
-    if (track.kind === "audio") {
-      track.attach();
-    }
-  });
-
-  audioTrack = room.localParticipant.audioTracks.values().next().value.track;
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      audioStream = stream;
+    });
 }
 
-function startEvaluation() {
+function startRecording() {
+  if (!audioStream) {
+    alert("Join room first");
+    return;
+  }
+
   chunks = [];
-  const stream = new MediaStream([audioTrack.mediaStreamTrack]);
-  mediaRecorder = new MediaRecorder(stream);
-  mediaRecorder.ondataavailable = e => chunks.push(e.data);
-  mediaRecorder.start();
+  recorder = new MediaRecorder(audioStream);
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.start();
 
-  document.getElementById("report").innerText = "Recording...";
+  document.getElementById("report").innerText = "Recording audio for evaluation...";
 }
 
-function stopEvaluation() {
-  mediaRecorder.stop();
+function stopRecording() {
+  recorder.stop();
 
-  mediaRecorder.onstop = async () => {
+  recorder.onstop = async () => {
     const blob = new Blob(chunks, { type: "audio/wav" });
     const form = new FormData();
     form.append("audio", blob, "gd.wav");
 
     document.getElementById("report").innerText = "Evaluating...";
 
-    const res = await fetch(`${BACKEND_URL}/evaluate`, {
+    const res = await fetch("https://gd-backend-2d44.onrender.com", {
       method: "POST",
       body: form
     });

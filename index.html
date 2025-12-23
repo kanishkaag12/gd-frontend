@@ -1,30 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GD Room</title>
-  <script src="https://unpkg.com/livekit-client/dist/livekit-client.umd.js"></script>
+  <title>GD Platform</title>
+</head>
+<body>
+
+<h2>Group Discussion</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Discussion</title>
   <style>
-    body { background:#0e1117; color:white; text-align:center; font-family:Arial }
-    video { width:300px; margin:10px; border-radius:10px }
-    button { padding:10px 20px; margin:5px }
+    body { background:#0e1117; color:white; font-family:Arial; text-align:center }
+    iframe { width:100%; height:550px; border:0; border-radius:10px }
+    button { padding:10px 20px; margin:10px; font-size:16px }
+    pre { background:#1c1f26; padding:15px; border-radius:10px; text-align:left }
   </style>
 </head>
 <body>
 
-<h2>🎤 Group Discussion</h2>
+<h2>🎤 Group Discussion Platform</h2>
 
-<input id="room" placeholder="Room ID" />
-<button onclick="joinRoom()">Join Room</button>
+<input id="room" placeholder="Enter Room Name" />
+<button onclick="joinRoom()">Join GD</button>
+
 <br><br>
 
-<button onclick="startEvaluation()">Start Evaluation</button>
-<button onclick="stopEvaluation()">Stop & Score</button>
+<button onclick="startRecording()">Start Evaluation</button>
+<button onclick="stopRecording()">Stop & Generate Report</button>
 
-<div id="videos"></div>
+<div id="jitsi"></div>
 
-<h3>📊 Report</h3>
-<pre id="report">No report</pre>
+<h3>📊 GD Report</h3>
+<pre id="report">No report yet</pre>
 
 <script src="script.js"></script>
+</body>
+</html>
+
+<iframe
+  src="https://meet.jit.si/GD_AI_EDUCATION_2025"
+  style="width:100%; height:600px; border:0;"
+  allow="camera; microphone; fullscreen"
+></iframe>
+
 </body>
 </html>
