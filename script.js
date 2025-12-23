@@ -1,4 +1,4 @@
-const socket = io("http://127.0.0.1:8000");
+const socket = io("https://gd-backend-2d44.onrender.com");
 let localStream, recorder, chunks = [];
 const videos = document.getElementById("videos");
 const report = document.getElementById("report");
