@@ -3,25 +3,27 @@ let chunks = [];
 let audioStream;
 
 // 🔹 JOIN JITSI ROOM
-function joinRoom() {
+async function joinRoom() {
   const room = document.getElementById("room").value.trim();
   if (!room) {
     alert("Enter room name");
     return;
   }
 
-  const roomName = `GD_${room}`; // prefix fixes auto-join
+  const roomName = `GD_${room}`;
+
+  // 👇 FORCE mic access first
+  audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
   document.getElementById("jitsi").innerHTML = `
     <iframe
       src="https://meet.jit.si/${roomName}
-        #config.prejoinPageEnabled=false
-        &config.startWithAudioMuted=false
-        &config.startWithVideoMuted=false"
+      #config.prejoinPageEnabled=false"
       allow="camera; microphone; fullscreen"
     ></iframe>
   `;
 }
+
 
 
 // 🔹 START AUDIO RECORDING
